@@ -1,26 +1,40 @@
 package com.interview.webdemo.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
+import lombok.*;
 
-import java.time.LocalDate;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Objects;
 @JsonIgnoreProperties(ignoreUnknown = true)
-@AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 @Entity
-@Table(name="identities")
+@Table(name="identities", uniqueConstraints = {
+        @UniqueConstraint(columnNames = "username"),
+        @UniqueConstraint(columnNames = "email")
+})
 public class Identity extends BaseEntity{
     private String username;
     private String password;
     private String email;
     private Date dob;
+    @JsonBackReference
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "identity", fetch = FetchType.LAZY)
+    private User user;
+    @OneToMany
+    private Set<Role> roles = new HashSet<>();
+
+    public Identity(String username, String password, String email, Date dob) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.dob = dob;
+    }
 
     @Override
     public boolean equals(Object o) {

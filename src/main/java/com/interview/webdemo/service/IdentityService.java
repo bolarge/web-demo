@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface IdentityService {
     Identity signUpUser(SignUpRequest signUpRequest);
-    UserRecord registerUser(UserRecord userRecord, Integer userIdentity);
+    UserRecord createUserProfile(UserRecord userRecord, Integer userIdentity);
     Iterable<User> fetchAllUsers();
 
 }
